@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>COVID-19 Data</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <nav>
+        <div class="container">
+            <h1>COVID-19 Tracker</h1>
+        </div>
+    </nav>
+
+    <section class="hero">
+        <div class="container">
+            <h2>
+                Get the latest COVID-19 data for any city
+            </h2>
+            <div class="input_container">
+                <input type="text" id="cityInput" placeholder="Enter City" />
+                <button onclick="getCovidData()">Get Data</button>
+            </div>
+            <div id="result"></div>
+        </div>
+    </section>
+
+    <script>
+        function getCovidData() {
+            var city = document.getElementById("cityInput").value;
+            fetch(`http://localhost:8080/covid-state/citywise/${city}`)
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Network response was not ok");
+                }
+                return response.text();
+            })
+            .then((data) => {
+                var resultDiv = document.getElementById("result");
+                var message = `${data}`;
+                resultDiv.innerHTML = `<p>${message}</p>`;
+            })
+            .catch((error) => {
+                console.error('There was a problem with the fetch operation:', error);
+                var resultDiv = document.getElementById("result");
+                resultDiv.innerHTML = `<p>Error fetching data. Please try again later.</p>`;
+            });
+        }
+    </script>
+</body>
+</html>
